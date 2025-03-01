@@ -1,0 +1,27 @@
+[package]
+name = "cosmwasm-evm"
+version = "0.0.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[profile.release]
+opt-level = 'z'
+debug = false
+rpath = false
+lto = "fat"
+debug-assertions = false
+strip = 'symbols'
+codegen-units = 1
+panic = 'abort'
+incremental = false
+overflow-checks = false
+
+[dependencies]
+bytemuck = { version = "1.21.0", features = ["derive", "min_const_generics", "must_cast"] }
+cosmwasm-schema = "2.2.1"
+cosmwasm-std = "2.2.1"
+revm = { version = "19.5.0", default-features = false, features = ["serde"] }
+serde_json = "1.0.138"
+sha2 = "0.10.8"

@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExecuteMsg",
+  "oneOf": [
+    {
+      "type": "string",
+      "enum": [
+        "lock"
+      ]
+    },
+    {
+      "type": "object",
+      "required": [
+        "transaction"
+      ],
+      "properties": {
+        "transaction": {
+          "$ref": "#/definitions/Tx"
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "unlock"
+      ],
+      "properties": {
+        "unlock": {
+          "$ref": "#/definitions/Uint256"
+        }
+      },
+      "additionalProperties": false
+    }
+  ],
+  "definitions": {
+    "Address": {
+      "description": "An ethereum address",
+      "type": "string",
+      "maxLength": 42,
+      "minLength": 42,
+      "pattern": "^0x[0-9a-fA-F]{40}$"
+    },
+    "HexBinary": {
+      "description": "This is a wrapper around Vec<u8> to add hex de/serialization with serde. It also adds some helper methods to help encode inline.\n\nThis is similar to `cosmwasm_std::Binary` but uses hex. See also <https://github.com/CosmWasm/cosmwasm/blob/main/docs/MESSAGE_TYPES.md>.",
+      "type": "string"
+    },
+    "Tx": {
+      "description": "Represents _all_ transaction requests to/from RPC.",
+      "type": "object",
+      "required": [
+        "to"
+      ],
+      "properties": {
+        "chain_id": {
+          "description": "The chain ID for the transaction.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
+        },
+        "input": {
+          "description": "Transaction data.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/HexBinary"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nonce": {
+          "description": "The nonce of the transaction.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
+        },
+        "to": {
+          "description": "The destination address of the transaction.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/TxKind"
+            }
+          ]
+        },
+        "type": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint8",
+          "minimum": 0.0
+        },
+        "value": {
+          "description": "The value transferred in the transaction, in wei.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Uint256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "TxKind": {
+      "description": "The `to` field of a transaction. Either a target address, or empty for a contract creation.",
+      "oneOf": [
+        {
+          "description": "A transaction that creates a contract.",
+          "type": "string",
+          "enum": [
+            "create"
+          ]
+        },
+        {
+          "description": "A transaction that calls a contract or transfer.",
+          "type": "object",
+          "required": [
+            "call"
+          ],
+          "properties": {
+            "call": {
+              "$ref": "#/definitions/Address"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "Uint256": {
+      "description": "An implementation of u256 that is using strings for JSON encoding/decoding, such that the full u256 range can be used for clients that convert JSON numbers to floats, like JavaScript and jq.\n\n# Examples\n\nUse `from` to create instances out of primitive uint types or `new` to provide big endian bytes:\n\n``` # use cosmwasm_std::Uint256; let a = Uint256::from(258u128); let b = Uint256::new([ 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 1u8, 2u8, ]); assert_eq!(a, b); ```",
+      "type": "string"
+    }
+  }
+}

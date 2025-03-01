@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InstantiateMsg",
+  "type": "object",
+  "required": [
+    "eth_token"
+  ],
+  "properties": {
+    "eth_token": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
